@@ -1,0 +1,34 @@
+3. 
+
+Debugging with React Developer Tools (RDT):
+Opened Browser DevTools (F12) and navigated to the "Components" tab provided by RDT.
+Investigating Issue 1 (Missing Name):
+Step: In the RDT "Components" tab, the component tree App > UserProfile was visible. I selected the UserProfile component.
+RDT Clue: In the right-hand pane showing the selected component's details, I inspected the props section for UserProfile. I observed the following props being received:
+role: "First Computer Programmer"
+userId: 1
+userName: "Ada Lovelace"
+Diagnosis: The UserProfile component is receiving the name data, but it's under the prop name userName. Looking at the UserProfile.js code (<p><strong>Name:</strong> {props.name}</p>), it tries to access props.name, which does not exist (it's undefined). This mismatch causes the name not to be displayed.
+Investigating Issue 2 (Counter Not Incrementing):
+Step: In the RDT "Components" tab, I selected the App component.
+RDT Clue (State): In the right-hand pane, I inspected the state section for App. It correctly showed: state: { user: { ... }, count: 0 }. The state key for the counter is indeed count.
+Step: While keeping the App component selected in RDT, I clicked the "Increment View Count" button on the web page.
+RDT Clue (State Update): I observed the state section in RDT did not update. The value of count remained 0. This confirmed the button click handler was likely not updating the state correctly.
+Diagnosis: Looking at the incrementCounter function in App.js (this.setState({ counter: this.state.count + 1 });), it attempts to update a state key named counter. However, the actual state key defined in the constructor and observed in RDT is count. The setState call is using the wrong key, therefore it doesn't modify the intended count state variable.
+
+
+4.
+
+ Fixes Implemented:
+
+Fix for Issue 1 (Missing Name):
+
+File: src/UserProfile.js
+Change: Modified the line rendering the name to use the correct prop name.
+Original: <p><strong>Name:</strong> {props.name}</p>
+Corrected: <p><strong>Name:</strong> {props.userName}</p>
+Fix for Issue 2 (Counter Not Incrementing):
+File: src/App.js
+Change: Modified the setState call within the incrementCounter method to use the correct state key (count).
+Original: this.setState({ counter: this.state.count + 1 });
+Corrected: this.setState({ count: this.state.count + 1 });
